@@ -625,6 +625,40 @@
             100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
 
+        /* ===== MINI GAME: MAGIC FLOWERS ===== */
+        .magic-flower {
+            position: absolute;
+            width: 45px; height: 45px;
+            cursor: pointer;
+            z-index: 100;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: floatMascot 4s ease-in-out infinite alternate;
+        }
+
+        .magic-flower:hover {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        .magic-flower.found {
+            transform: scale(0) rotate(-45deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .game-header {
+            text-align: center;
+            font-family: 'Caveat', cursive;
+            font-size: 1.15rem;
+            color: #8b2252;
+            margin-bottom: 0.8rem;
+            background: rgba(139, 34, 82, 0.05);
+            padding: 0.4rem;
+            border-radius: 8px;
+            border: 1px dashed rgba(139, 34, 82, 0.2);
+            transition: all 0.3s ease;
+        }
+
         .particle {
             position: absolute;
             width: 2px;
@@ -727,14 +761,6 @@
 
     <div class="flower-layer" id="flower-layer"></div>
 
-    <!-- Floating mascots (envelope scene) -->
-    <div class="float-mascot" style="top: 12%; left: 8%; animation-delay: 0s; font-size: 1.4rem;">🦋</div>
-    <div class="float-mascot" style="top: 18%; right: 10%; animation-delay: 1.5s; font-size: 1.2rem;">✨</div>
-    <div class="float-mascot" style="bottom: 20%; left: 12%; animation-delay: 3s; font-size: 1.5rem;">🌸</div>
-    <div class="float-mascot" style="bottom: 15%; right: 8%; animation-delay: 0.8s; font-size: 1.3rem;">💫</div>
-    <div class="float-mascot" style="top: 40%; left: 5%; animation-delay: 2.2s; font-size: 1.1rem;">🌼</div>
-    <div class="float-mascot" style="top: 35%; right: 6%; animation-delay: 4s; font-size: 1.3rem;">🎀</div>
-
     <!-- ===== SCENE 1: ENVELOPE ===== -->
     <section class="scene-envelope" id="scene-envelope">
         <div class="envelope-wrapper" id="envelope-wrapper">
@@ -805,25 +831,26 @@
             </div>
 
             <aside class="card-details el" data-delay="1000">
+                <div class="game-header" id="game-header">🔍 Find 3 hidden flowers to unlock details! (0/3)</div>
                 <div class="detail-row" data-scramble="18th April, 2026">
                     <span class="d-icon">📅</span>
                     <div class="d-info">
                         <div class="d-label">Date</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
                     </div>
                 </div>
                 <div class="detail-row" data-scramble="5:00 PM onwards">
                     <span class="d-icon">🕔</span>
                     <div class="d-info">
                         <div class="d-label">Time</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
                     </div>
                 </div>
                 <div class="detail-row" data-scramble="2nd Floor, Legal History Museum">
                     <span class="d-icon">📍</span>
                     <div class="d-info">
                         <div class="d-label">Venue</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
                     </div>
                 </div>
             </aside>
@@ -1048,20 +1075,68 @@
         }
 
         const scrambleRows = document.querySelectorAll('.detail-row[data-scramble]');
-        scrambleRows.forEach(row => {
-            const target = row.querySelector('.scramble-target');
-            const fx = new Scrambler(target);
-            const originalText = row.getAttribute('data-scramble');
+        
+        // ===== MINI GAME LOGIC =====
+        let flowersFound = 0;
+        const gameHeader = document.getElementById('game-header');
+        
+        // Create 3 SVG flowers dynamically inside the scene-card
+        const locations = [
+            { top: '15%', left: '8%' },
+            { top: '65%', right: '5%' },
+            { bottom: '10%', left: '40%' }
+        ];
+        
+        locations.forEach((loc, index) => {
+            const svgFlower = document.createElement('div');
+            svgFlower.className = 'magic-flower';
+            // Non-emoji SVG blossom drawing
+            svgFlower.innerHTML = `
+                <svg viewBox="0 0 100 100" width="100%" height="100%" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))">
+                    <path d="M50 50 C 40 20, 20 40, 50 50 Z" fill="#d47c9e" />
+                    <path d="M50 50 C 60 20, 80 40, 50 50 Z" fill="#e8a87c" />
+                    <path d="M50 50 C 70 60, 60 80, 50 50 Z" fill="#d47c9e" />
+                    <path d="M50 50 C 30 60, 40 80, 50 50 Z" fill="#e8a87c" />
+                    <circle cx="50" cy="50" r="8" fill="#f5efe6" />
+                </svg>
+            `;
+            Object.assign(svgFlower.style, loc);
+            svgFlower.style.animationDelay = (Math.random()*2) + 's';
             
-            let isUnscrambled = false;
-            row.addEventListener('mouseenter', () => {
-                if(!isUnscrambled) {
-                    target.style.cursor = 'text';
-                    fx.setText(originalText);
-                    isUnscrambled = true;
+            document.getElementById('scene-card').appendChild(svgFlower);
+            
+            svgFlower.addEventListener('click', () => {
+                if(svgFlower.classList.contains('found')) return;
+                svgFlower.classList.add('found');
+                flowersFound++;
+                
+                if(flowersFound === 3) {
+                    gameHeader.innerText = "🎉 All details unlocked! 🎉";
+                    gameHeader.style.background = "rgba(46, 139, 87, 0.1)";
+                    gameHeader.style.color = "#2e8b57";
+                    gameHeader.style.borderColor = "rgba(46, 139, 87, 0.3)";
+                } else {
+                    gameHeader.innerText = `🔍 Found ${flowersFound}/3 hidden flowers!`;
                 }
+                
+                // Unlock the corresponding detail row
+                const row = scrambleRows[index];
+                const target = row.querySelector('.scramble-target');
+                const originalText = row.getAttribute('data-scramble');
+                const fx = new Scrambler(target);
+                fx.setText(originalText);
+                target.style.cursor = 'text';
+                
+                // Extra fun mini confetti pop
+                boomMini(loc);
             });
         });
+
+        // Mini confetti burst for finding a flower
+        function boomMini(loc) {
+            for (let i = 0; i < 20; i++) pieces.push(new Piece());
+            run();
+        }
     </script>
 </body>
 </html>
