@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>You're Invited — Aishana's Farewell 💌</title>
+    <title>GWIC Farewell — Batch of 2021-26 💌</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Satisfy&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -374,18 +374,19 @@
             font-style: normal;
         }
 
-        /* ===== MAIN PHOTO GALLERY ===== */
-        .card-photos {
-            display: flex;
-            gap: 0.6rem;
-            margin-bottom: 0.5rem;
-            justify-content: center;
-            flex-wrap: nowrap;
+        /* ===== RESPONSIVE PHOTO GRID ===== */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            justify-items: center;
         }
 
         .photo-frame {
-            width: 125px;
-            height: 150px;
+            width: 100%;
+            max-width: 140px;
+            aspect-ratio: 4 / 5;
             background: #e8dfd1;
             border-radius: 8px;
             overflow: hidden;
@@ -396,14 +397,18 @@
                         box-shadow 0.4s ease;
         }
 
-        .photo-frame:hover {
-            transform: scale(1.08) rotate(-2deg) !important;
-            box-shadow: 0 8px 28px rgba(0,0,0,0.18);
-            z-index: 2;
+        .photo-grid .photo-frame:nth-child(even) {
+            transform: rotate(2.5deg);
+        }
+        
+        .photo-grid .photo-frame:nth-child(odd) {
+            transform: rotate(-2deg);
         }
 
-        .photo-frame:nth-child(2):hover {
-            transform: scale(1.08) rotate(2deg) !important;
+        .photo-frame:hover {
+            transform: scale(1.08) rotate(0deg) !important;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+            z-index: 2;
         }
 
         .photo-frame img {
@@ -417,11 +422,22 @@
             transform: scale(1.06);
         }
 
+        .placeholder-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: rgba(201, 168, 124, 0.1);
+            font-size: 2rem;
+            color: rgba(201, 168, 124, 0.5);
+        }
+
         /* Cute photo caption */
         .photo-strip-caption {
             text-align: center;
             font-family: 'Caveat', cursive;
-            font-size: 1rem;
+            font-size: 1.15rem;
             color: #a08a72;
             margin-bottom: 1.8rem;
         }
@@ -706,9 +722,9 @@
                 padding: 1.5rem 0.8rem 2rem;
             }
 
-            .photo-frame {
-                width: 95px;
-                height: 115px;
+            .photo-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 0.8rem;
             }
 
             .memory-frame {
@@ -782,31 +798,42 @@
         <article class="invitation-card">
             <header class="card-emojis el" data-delay="0">🎊 ✨ 🥳</header>
             <div class="card-gwic el" data-delay="100">GWIC — Farewell</div>
-            <div class="card-invited el" data-delay="200">hey you! you're cordially summoned to</div>
-            <div class="card-farewell el" data-delay="300">your very own farewell <span class="wiggle">🎉</span></div>
-            <h1 class="card-name el" data-delay="400">Aishana !!</h1>
-            <div class="card-miss el" data-delay="500">yes, we're throwing you a party — deal with it 💜</div>
+            <div class="card-invited el" data-delay="200">the official</div>
+            <div class="card-farewell el" data-delay="300">Farewell Party for the</div>
+            <h1 class="card-name el" style="font-size: 3.2rem;" data-delay="400">Batch of 2021-26</h1>
+            <div class="card-miss el" data-delay="500">One last dhamaka before you leave us! 💜</div>
             <div class="card-line el" data-delay="600"></div>
 
             <div class="card-tagline el" data-delay="700">
-                One last evening of laughs, stories,<br>
-                and memories before you go.<br>
+                It's time to celebrate the memories, the chaos,<br>
+                and everything in between.<br>
                 <span class="aish-karo">Aish karo! <span class="sparkle">✨</span></span>
             </div>
 
-            <!-- Main 3-photo gallery -->
-            <div class="card-photos el" data-delay="800">
-                <div class="photo-frame" style="transform: rotate(-3deg)">
-                    <img src="photos/3b8a3fe9-ba0b-4842-b49f-2dba949fb9f3.JPG" alt="Aishana with friend">
+            <!-- Responsive Frame Gallery -->
+            <div class="photo-grid el" data-delay="800">
+                <!-- Pre-filled frames -->
+                <div class="photo-frame">
+                    <img src="photos/3b8a3fe9-ba0b-4842-b49f-2dba949fb9f3.JPG" alt="GWIC Memory">
                 </div>
-                <div class="photo-frame" style="transform: rotate(2deg)">
-                    <img src="photos/8f462593-5452-4dbf-8a36-35586f6082c8.JPG" alt="Aishana laughing with friends">
+                <div class="photo-frame">
+                    <img src="photos/8f462593-5452-4dbf-8a36-35586f6082c8.JPG" alt="GWIC Memory">
                 </div>
-                <div class="photo-frame" style="transform: rotate(-1deg)">
-                    <img src="photos/aba0b178-5fc8-47fa-b906-f134af372ec8.JPG" alt="Aishana having fun">
+                <!-- Empty Frames ready for more photos -->
+                <div class="photo-frame">
+                    <div class="placeholder-frame">📸</div>
+                </div>
+                <div class="photo-frame">
+                    <div class="placeholder-frame">📸</div>
+                </div>
+                <div class="photo-frame">
+                    <div class="placeholder-frame">📸</div>
+                </div>
+                <div class="photo-frame">
+                    <div class="placeholder-frame">📸</div>
                 </div>
             </div>
-            <div class="photo-strip-caption el" data-delay="850">^ proof that you can't escape us 📸</div>
+            <div class="photo-strip-caption el" data-delay="850">add your favorite core memories here ✨</div>
 
             <!-- Doodle row -->
             <div class="doodle-row el" data-delay="870">🌸 🦋 💛 🌼 ✿</div>
