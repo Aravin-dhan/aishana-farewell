@@ -641,38 +641,19 @@
             100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
 
-        /* ===== MINI GAME: MAGIC FLOWERS ===== */
-        .magic-flower {
-            position: absolute;
-            width: 45px; height: 45px;
+        /* ===== BLUR REVEAL ===== */
+        .blur-reveal {
+            filter: blur(6px);
+            opacity: 0.6;
             cursor: pointer;
-            z-index: 100;
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            animation: floatMascot 4s ease-in-out infinite alternate;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
         }
 
-        .magic-flower:hover {
-            transform: scale(1.15) rotate(15deg);
-        }
-
-        .magic-flower.found {
-            transform: scale(0) rotate(-45deg);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .game-header {
-            text-align: center;
-            font-family: 'Caveat', cursive;
-            font-size: 1.15rem;
-            color: #8b2252;
-            margin-bottom: 0.8rem;
-            background: rgba(139, 34, 82, 0.05);
-            padding: 0.4rem;
-            border-radius: 8px;
-            border: 1px dashed rgba(139, 34, 82, 0.2);
-            transition: all 0.3s ease;
+        .blur-reveal.revealed {
+            filter: blur(0);
+            opacity: 1;
+            user-select: text;
         }
 
         .particle {
@@ -858,26 +839,25 @@
             </div>
 
             <aside class="card-details el" data-delay="1000">
-                <div class="game-header" id="game-header">🔍 Find 3 hidden flowers to unlock details! (0/3)</div>
-                <div class="detail-row" data-scramble="18th April, 2026">
+                <div class="detail-row">
                     <span class="d-icon">📅</span>
                     <div class="d-info">
                         <div class="d-label">Date</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
+                        <div class="d-value blur-reveal">18th April, 2026</div>
                     </div>
                 </div>
-                <div class="detail-row" data-scramble="5:00 PM onwards">
+                <div class="detail-row">
                     <span class="d-icon">🕔</span>
                     <div class="d-info">
                         <div class="d-label">Time</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
+                        <div class="d-value blur-reveal">5:00 PM onwards</div>
                     </div>
                 </div>
-                <div class="detail-row" data-scramble="2nd Floor, Legal History Museum">
+                <div class="detail-row">
                     <span class="d-icon">📍</span>
                     <div class="d-info">
                         <div class="d-label">Venue</div>
-                        <div class="d-value scramble-target" style="cursor:help;">(locked 🔒)</div>
+                        <div class="d-value blur-reveal">2nd Floor, Legal History Museum</div>
                     </div>
                 </div>
             </aside>
@@ -1046,124 +1026,48 @@
             wrapper.style.transition = 'transform 0.5s ease';
         });
 
-        // ===== SCRAMBLE TEXT EFFECT =====
-        class Scrambler {
-            constructor(el) {
-                this.el = el;
-                this.chars = '!<>-_\\\\/[]{}—=+*^?#________';
-                this.update = this.update.bind(this);
-            }
-            setText(newText) {
-                const oldText = this.el.innerText;
-                const length = Math.max(oldText.length, newText.length);
-                const promise = new Promise((resolve) => this.resolve = resolve);
-                this.queue = [];
-                for (let i = 0; i < length; i++) {
-                    const from = oldText[i] || '';
-                    const to = newText[i] || '';
-                    const start = Math.floor(Math.random() * 40);
-                    const end = start + Math.floor(Math.random() * 40);
-                    this.queue.push({ from, to, start, end });
-                }
-                cancelAnimationFrame(this.frameRequest);
-                this.frame = 0;
-                this.update();
-                return promise;
-            }
-            update() {
-                let output = '';
-                let complete = 0;
-                for (let i = 0, n = this.queue.length; i < n; i++) {
-                    let { from, to, start, end, char } = this.queue[i];
-                    if (this.frame >= end) {
-                        complete++;
-                        output += to;
-                    } else if (this.frame >= start) {
-                        if (!char || Math.random() < 0.28) {
-                            char = this.randomChar();
-                            this.queue[i].char = char;
-                        }
-                        output += char;
-                    } else {
-                        output += from;
-                    }
-                }
-                this.el.innerHTML = output;
-                if (complete === this.queue.length) {
-                    this.resolve();
-                } else {
-                    this.frameRequest = requestAnimationFrame(this.update);
-                    this.frame++;
-                }
-            }
-            randomChar() {
-                return this.chars[Math.floor(Math.random() * this.chars.length)];
+        // ===== FAIRY DUST ON REVEAL =====
+        function createFairyDust(x, y) {
+            for (let i = 0; i < 12; i++) {
+                const dust = document.createElement('div');
+                dust.style.position = 'fixed';
+                dust.style.left = x + 'px';
+                dust.style.top = y + 'px';
+                dust.style.width = Math.random() * 4 + 2 + 'px';
+                dust.style.height = dust.style.width;
+                dust.style.background = Math.random() > 0.5 ? '#f5efe6' : '#c9a87c';
+                dust.style.borderRadius = '50%';
+                dust.style.pointerEvents = 'none';
+                dust.style.zIndex = '9999';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 40 + 20;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance - 30; // float up a bit
+                
+                dust.animate([
+                    { transform: 'translate(0,0) scale(1)', opacity: 0.8 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: Math.random() * 600 + 400,
+                    easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+                });
+                
+                document.body.appendChild(dust);
+                setTimeout(() => dust.remove(), 1000);
             }
         }
 
-        const scrambleRows = document.querySelectorAll('.detail-row[data-scramble]');
-        
-        // ===== MINI GAME LOGIC =====
-        let flowersFound = 0;
-        const gameHeader = document.getElementById('game-header');
-        
-        // Create 3 SVG flowers dynamically inside the scene-card
-        const locations = [
-            { top: '15%', left: '8%' },
-            { top: '65%', right: '5%' },
-            { bottom: '10%', left: '40%' }
-        ];
-        
-        locations.forEach((loc, index) => {
-            const svgFlower = document.createElement('div');
-            svgFlower.className = 'magic-flower';
-            // Non-emoji SVG blossom drawing
-            svgFlower.innerHTML = `
-                <svg viewBox="0 0 100 100" width="100%" height="100%" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))">
-                    <path d="M50 50 C 40 20, 20 40, 50 50 Z" fill="#d47c9e" />
-                    <path d="M50 50 C 60 20, 80 40, 50 50 Z" fill="#e8a87c" />
-                    <path d="M50 50 C 70 60, 60 80, 50 50 Z" fill="#d47c9e" />
-                    <path d="M50 50 C 30 60, 40 80, 50 50 Z" fill="#e8a87c" />
-                    <circle cx="50" cy="50" r="8" fill="#f5efe6" />
-                </svg>
-            `;
-            Object.assign(svgFlower.style, loc);
-            svgFlower.style.animationDelay = (Math.random()*2) + 's';
-            
-            document.getElementById('scene-card').appendChild(svgFlower);
-            
-            svgFlower.addEventListener('click', () => {
-                if(svgFlower.classList.contains('found')) return;
-                svgFlower.classList.add('found');
-                flowersFound++;
-                
-                if(flowersFound === 3) {
-                    gameHeader.innerText = "🎉 All details unlocked! 🎉";
-                    gameHeader.style.background = "rgba(46, 139, 87, 0.1)";
-                    gameHeader.style.color = "#2e8b57";
-                    gameHeader.style.borderColor = "rgba(46, 139, 87, 0.3)";
-                } else {
-                    gameHeader.innerText = `🔍 Found ${flowersFound}/3 hidden flowers!`;
+        const reveals = document.querySelectorAll('.blur-reveal');
+        reveals.forEach(el => {
+            el.addEventListener('mouseenter', (e) => {
+                if (!el.classList.contains('revealed')) {
+                    el.classList.add('revealed');
+                    const rect = el.getBoundingClientRect();
+                    createFairyDust(rect.left + rect.width / 2, rect.top + rect.height / 2);
                 }
-                
-                // Unlock the corresponding detail row
-                const row = scrambleRows[index];
-                const target = row.querySelector('.scramble-target');
-                const originalText = row.getAttribute('data-scramble');
-                const fx = new Scrambler(target);
-                fx.setText(originalText);
-                target.style.cursor = 'text';
-                
-                // Extra fun mini confetti pop
-                boomMini(loc);
             });
         });
-
-        // Mini confetti burst for finding a flower
-        function boomMini(loc) {
-            for (let i = 0; i < 20; i++) pieces.push(new Piece());
-            run();
-        }
     </script>
 </body>
 </html>
