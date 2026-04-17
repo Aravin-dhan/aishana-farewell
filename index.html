@@ -594,12 +594,35 @@
             60% { transform: scale(0.95); }
         }
 
-        /* ===== SUBTLE FLOATING PARTICLES ===== */
+        /* ===== SUBTLE FLOATING PARTICLES & FLOWERS ===== */
         .particles {
             position: fixed;
             inset: 0;
             pointer-events: none;
             z-index: 0;
+            overflow: hidden;
+        }
+
+        .flower-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .bg-flower {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0.15;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.2; }
+            90% { opacity: 0.2; }
+            100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
         }
 
         .particle {
@@ -702,6 +725,8 @@
     <canvas id="confetti-canvas"></canvas>
     <div class="particles" id="particles"></div>
 
+    <div class="flower-layer" id="flower-layer"></div>
+
     <!-- Floating mascots (envelope scene) -->
     <div class="float-mascot" style="top: 12%; left: 8%; animation-delay: 0s; font-size: 1.4rem;">🦋</div>
     <div class="float-mascot" style="top: 18%; right: 10%; animation-delay: 1.5s; font-size: 1.2rem;">✨</div>
@@ -711,7 +736,7 @@
     <div class="float-mascot" style="top: 35%; right: 6%; animation-delay: 4s; font-size: 1.3rem;">🎀</div>
 
     <!-- ===== SCENE 1: ENVELOPE ===== -->
-    <div class="scene-envelope" id="scene-envelope">
+    <section class="scene-envelope" id="scene-envelope">
         <div class="envelope-wrapper" id="envelope-wrapper">
             <div class="letter-peek"></div>
             <div class="envelope-back-left"></div>
@@ -724,12 +749,12 @@
             <div class="wax-seal" id="wax-seal">💌</div>
             <div class="tap-hint">tap the seal to open ✨</div>
         </div>
-    </div>
+    </section>
 
     <!-- ===== SCENE 2: FULL INVITATION ===== -->
-    <div class="scene-card" id="scene-card">
-        <div class="invitation-card">
-            <div class="card-emojis el" data-delay="0">🎊 ✨ 🥳</div>
+    <main class="scene-card" id="scene-card">
+        <article class="invitation-card">
+            <header class="card-emojis el" data-delay="0">🎊 ✨ 🥳</header>
             <div class="card-gwic el" data-delay="100">GWIC — Farewell</div>
             <div class="card-invited el" data-delay="200">hey you! you're cordially summoned to</div>
             <div class="card-farewell el" data-delay="300">your very own farewell <span class="wiggle">🎉</span></div>
@@ -779,40 +804,54 @@
                 </div>
             </div>
 
-            <div class="card-details el" data-delay="1000">
-                <div class="detail-row">
+            <aside class="card-details el" data-delay="1000">
+                <div class="detail-row" data-scramble="18th April, 2026">
                     <span class="d-icon">📅</span>
                     <div class="d-info">
                         <div class="d-label">Date</div>
-                        <div class="d-value">18th April, 2026</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
                     </div>
                 </div>
-                <div class="detail-row">
+                <div class="detail-row" data-scramble="5:00 PM onwards">
                     <span class="d-icon">🕔</span>
                     <div class="d-info">
                         <div class="d-label">Time</div>
-                        <div class="d-value">5:00 PM onwards</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
                     </div>
                 </div>
-                <div class="detail-row">
+                <div class="detail-row" data-scramble="2nd Floor, Legal History Museum">
                     <span class="d-icon">📍</span>
                     <div class="d-info">
                         <div class="d-label">Venue</div>
-                        <div class="d-value">2nd Floor, Legal History Museum</div>
+                        <div class="d-value scramble-target" style="cursor:help;">(hover to reveal)</div>
                     </div>
                 </div>
-            </div>
+            </aside>
 
-            <div class="card-signoff el" data-delay="1100">
+            <footer class="card-signoff el" data-delay="1100">
                 <div class="signoff-line"></div>
                 <div class="signoff-text">You better show up — it's YOUR party!</div>
                 <div class="signoff-from">with love, your GWIC fam</div>
                 <div class="signoff-emoji">🫶 <span class="bounce-heart">💃</span> 🎉</div>
-            </div>
-        </div>
-    </div>
+            </footer>
+        </article>
+    </main>
 
     <script>
+        // ===== BACKGROUND FLOWERS =====
+        const flowerLayer = document.getElementById('flower-layer');
+        const flowerEmojis = ['🌸', '🌼', '🌻', '🌺', '🌷', '🌿'];
+        for (let i = 0; i < 20; i++) {
+            const f = document.createElement('div');
+            f.className = 'bg-flower';
+            f.innerText = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            f.style.left = Math.random() * 100 + '%';
+            f.style.fontSize = (Math.random() * 1.5 + 1) + 'rem';
+            f.style.animationDelay = Math.random() * 20 + 's';
+            f.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            flowerLayer.appendChild(f);
+        }
+
         // ===== PARTICLES =====
         const particlesEl = document.getElementById('particles');
         for (let i = 0; i < 15; i++) {
@@ -951,6 +990,77 @@
             if (opened) return;
             wrapper.style.transform = '';
             wrapper.style.transition = 'transform 0.5s ease';
+        });
+
+        // ===== SCRAMBLE TEXT EFFECT =====
+        class Scrambler {
+            constructor(el) {
+                this.el = el;
+                this.chars = '!<>-_\\\\/[]{}—=+*^?#________';
+                this.update = this.update.bind(this);
+            }
+            setText(newText) {
+                const oldText = this.el.innerText;
+                const length = Math.max(oldText.length, newText.length);
+                const promise = new Promise((resolve) => this.resolve = resolve);
+                this.queue = [];
+                for (let i = 0; i < length; i++) {
+                    const from = oldText[i] || '';
+                    const to = newText[i] || '';
+                    const start = Math.floor(Math.random() * 40);
+                    const end = start + Math.floor(Math.random() * 40);
+                    this.queue.push({ from, to, start, end });
+                }
+                cancelAnimationFrame(this.frameRequest);
+                this.frame = 0;
+                this.update();
+                return promise;
+            }
+            update() {
+                let output = '';
+                let complete = 0;
+                for (let i = 0, n = this.queue.length; i < n; i++) {
+                    let { from, to, start, end, char } = this.queue[i];
+                    if (this.frame >= end) {
+                        complete++;
+                        output += to;
+                    } else if (this.frame >= start) {
+                        if (!char || Math.random() < 0.28) {
+                            char = this.randomChar();
+                            this.queue[i].char = char;
+                        }
+                        output += char;
+                    } else {
+                        output += from;
+                    }
+                }
+                this.el.innerHTML = output;
+                if (complete === this.queue.length) {
+                    this.resolve();
+                } else {
+                    this.frameRequest = requestAnimationFrame(this.update);
+                    this.frame++;
+                }
+            }
+            randomChar() {
+                return this.chars[Math.floor(Math.random() * this.chars.length)];
+            }
+        }
+
+        const scrambleRows = document.querySelectorAll('.detail-row[data-scramble]');
+        scrambleRows.forEach(row => {
+            const target = row.querySelector('.scramble-target');
+            const fx = new Scrambler(target);
+            const originalText = row.getAttribute('data-scramble');
+            
+            let isUnscrambled = false;
+            row.addEventListener('mouseenter', () => {
+                if(!isUnscrambled) {
+                    target.style.cursor = 'text';
+                    fx.setText(originalText);
+                    isUnscrambled = true;
+                }
+            });
         });
     </script>
 </body>
