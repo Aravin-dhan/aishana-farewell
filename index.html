@@ -621,12 +621,11 @@
 
         /* ===== MUSIC TOGGLE ===== */
         .music-toggle {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
+            position: absolute;
+            bottom: 25%;
+            right: 40px;
+            padding: 8px 16px;
+            border-radius: 20px;
             background: rgba(245, 239, 230, 0.4);
             border: 2px solid rgba(212, 196, 168, 0.5);
             backdrop-filter: blur(8px);
@@ -634,7 +633,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
             color: #8b7355;
             z-index: 1000;
             cursor: pointer;
@@ -650,7 +650,7 @@
         }
 
         .music-toggle:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             background: rgba(245, 239, 230, 0.8);
         }
 
@@ -837,8 +837,6 @@
         <source src="photos/bgm.mp4" type="audio/mp4">
     </audio>
 
-    <div class="music-toggle" id="music-toggle">🔊</div>
-
     <canvas id="confetti-canvas"></canvas>
     <div class="particles" id="particles"></div>
 
@@ -882,6 +880,8 @@
             <div class="sticker-emoji el hover-pop" data-delay="1100" style="top: 45%; left: -15px; transform: rotate(-10deg); font-size: 2.2rem;">💖</div>
             
             <div class="sticker-emoji el hover-pop" data-delay="1150" style="bottom: 25%; right: -15px; transform: rotate(-25deg); font-size: 2.5rem;">🌸</div>
+            
+            <div class="music-toggle el" data-delay="1200" id="music-toggle">⏸ Pause</div>
             
             <div class="sticker el hover-pop" data-delay="1200" style="bottom: 12%; left: -25px; transform: rotate(12deg); color: #8b7355; border-radius: 50%; width: 55px; height: 55px; display:flex; align-items:center; justify-content:center; text-align:center; padding:0; z-index: 20;">VIP</div>
             
@@ -930,6 +930,30 @@
                     </div>
                     <div class="memory-frame" data-caption="">
                         <img src="photos/gwic_13.jpeg" alt="Posing Memory">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_1.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_2.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_3.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_4.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_5.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_6.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_7.png" alt="Memory Segment">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/new_8.png" alt="Memory Segment">
                     </div>
                 </div>
             </div>
@@ -1073,10 +1097,10 @@
             e.stopPropagation(); // prevent clicking through to global listeners
             if (bgm.paused) {
                 bgm.play();
-                musicBtn.innerHTML = '🔊';
+                musicBtn.innerHTML = '⏸ Pause';
             } else {
                 bgm.pause();
-                musicBtn.innerHTML = '🔇';
+                musicBtn.innerHTML = '▶️ Play';
             }
         });
 
@@ -1084,11 +1108,12 @@
             if (opened) return;
             opened = true;
             
-            // Start background music slightly earlier exactly at 0:53
-            bgm.currentTime = 53;
+            // Start background music at exactly 0:55
+            bgm.currentTime = 55;
             bgm.volume = 0.5;
             bgm.play().then(() => {
                 musicBtn.classList.add('visible');
+                musicBtn.innerHTML = '⏸ Pause';
             }).catch(e => console.log('Audio autoplay blocked, requires user interact.'));
 
             // Open the flap
