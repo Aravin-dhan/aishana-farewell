@@ -27,6 +27,7 @@
         .scene-envelope {
             position: fixed;
             inset: 0;
+            margin-top: -10vh;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1024,7 +1025,7 @@
         const bgm = document.getElementById('bgm');
         let opened = false;
 
-        wrapper.addEventListener('click', () => {
+        function triggerOpen() {
             if (opened) return;
             opened = true;
             
@@ -1060,7 +1061,15 @@
                 boom();
                 animateElements();
             }, 2000);
+        }
+
+        wrapper.addEventListener('click', triggerOpen);
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) triggerOpen();
         });
+        window.addEventListener('touchmove', (e) => {
+            triggerOpen();
+        }, {passive: true});
 
         // ===== STAGGERED REVEAL =====
         function animateElements() {
@@ -1137,7 +1146,7 @@
             createFairyDust(e.clientX, e.clientY);
         });
 
-        // Add trailing fairy dust on mouse move
+        // Add trailing glowing fairy dust on mouse move
         let lastMagicTime = 0;
         document.addEventListener('mousemove', (e) => {
             const now = Date.now();
@@ -1147,25 +1156,27 @@
                 dust.style.position = 'fixed';
                 dust.style.left = e.clientX + 'px';
                 dust.style.top = e.clientY + 'px';
-                dust.style.width = Math.random() * 4 + 2 + 'px';
+                dust.style.width = Math.random() * 6 + 4 + 'px';
                 dust.style.height = dust.style.width;
-                dust.style.background = Math.random() > 0.5 ? '#f5efe6' : '#c9a87c';
+                const color = Math.random() > 0.5 ? '#f5efe6' : '#ffd700';
+                dust.style.background = color;
+                dust.style.boxShadow = `0 0 ${Math.random() * 15 + 5}px 2px ${color}`;
                 dust.style.borderRadius = '50%';
                 dust.style.pointerEvents = 'none';
                 dust.style.zIndex = '9999';
                 
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 15;
+                const distance = Math.random() * 20;
                 const tx = Math.cos(angle) * distance;
-                const ty = Math.sin(angle) * distance + 10;
+                const ty = Math.sin(angle) * distance + 15;
                 
                 dust.animate([
-                    { transform: 'translate(0,0) scale(1)', opacity: 0.6 },
+                    { transform: 'translate(0,0) scale(1)', opacity: 0.8 },
                     { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
-                ], { duration: 500, easing: 'ease-out' });
+                ], { duration: 800, easing: 'ease-out' });
                 
                 document.body.appendChild(dust);
-                setTimeout(() => dust.remove(), 500);
+                setTimeout(() => dust.remove(), 800);
             }
         });
     </script>
