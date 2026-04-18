@@ -619,6 +619,41 @@
             60% { transform: scale(0.95); }
         }
 
+        /* ===== MUSIC TOGGLE ===== */
+        .music-toggle {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: rgba(245, 239, 230, 0.4);
+            border: 2px solid rgba(212, 196, 168, 0.5);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #8b7355;
+            z-index: 1000;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .music-toggle.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .music-toggle:hover {
+            transform: scale(1.1);
+            background: rgba(245, 239, 230, 0.8);
+        }
+
         /* ===== SUBTLE FLOATING PARTICLES & FLOWERS ===== */
         .particles {
             position: fixed;
@@ -802,6 +837,8 @@
         <source src="photos/bgm.mp4" type="audio/mp4">
     </audio>
 
+    <div class="music-toggle" id="music-toggle">🔊</div>
+
     <canvas id="confetti-canvas"></canvas>
     <div class="particles" id="particles"></div>
 
@@ -880,13 +917,19 @@
 
             <!-- Memory strip (horizontal scroll) -->
             <div class="memory-strip-wrapper el" data-delay="900">
-                <div class="memory-strip-label">swipe for more memories →</div>
+                <div class="memory-strip-label">swipe to see more memories →</div>
                 <div class="memory-strip">
                     <div class="memory-frame" data-caption="">
                         <img src="photos/gwic_9.jpeg" alt="Group selfie indoors">
                     </div>
                     <div class="memory-frame" data-caption="">
                         <img src="photos/gwic_10.jpeg" style="object-position: right 25%;" alt="Posing">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/gwic_12.jpeg" alt="Posing Memory">
+                    </div>
+                    <div class="memory-frame" data-caption="">
+                        <img src="photos/gwic_13.jpeg" alt="Posing Memory">
                     </div>
                 </div>
             </div>
@@ -1023,7 +1066,19 @@
         const sceneCard = document.getElementById('scene-card');
         const mascots = document.querySelectorAll('.float-mascot');
         const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('music-toggle');
         let opened = false;
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent clicking through to global listeners
+            if (bgm.paused) {
+                bgm.play();
+                musicBtn.innerHTML = '🔊';
+            } else {
+                bgm.pause();
+                musicBtn.innerHTML = '🔇';
+            }
+        });
 
         function triggerOpen() {
             if (opened) return;
@@ -1032,7 +1087,9 @@
             // Start background music slightly earlier exactly at 0:53
             bgm.currentTime = 53;
             bgm.volume = 0.5;
-            bgm.play().catch(e => console.log('Audio autoplay blocked, requires user interact.'));
+            bgm.play().then(() => {
+                musicBtn.classList.add('visible');
+            }).catch(e => console.log('Audio autoplay blocked, requires user interact.'));
 
             // Open the flap
             wrapper.classList.add('opening');
