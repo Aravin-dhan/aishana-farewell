@@ -792,8 +792,7 @@
 <body>
     <!-- Background Audio -->
     <audio id="bgm" loop>
-        <!-- Temporary upbeat acoustic track, swap with any file later! -->
-        <source src="https://assets.mixkit.co/music/preview/mixkit-acoustic-motivation-11.mp3" type="audio/mpeg">
+        <source src="photos/bgm.mp4" type="audio/mp4">
     </audio>
 
     <canvas id="confetti-canvas"></canvas>
@@ -810,9 +809,6 @@
     <!-- ===== SCENE 1: ENVELOPE ===== -->
     <section class="scene-envelope" id="scene-envelope">
         <div class="envelope-wrapper" id="envelope-wrapper">
-            <!-- GWIC Logo on Envelope Top Right -->
-            <img src="photos/gwic_logo.png" style="position: absolute; top: -35px; right: -30px; transform: rotate(15deg); width: 110px; height: auto; box-shadow: none; border-radius: 0; background: transparent; padding: 0; z-index: 100; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); pointer-events: auto; cursor: grab;" alt="GWIC Logo" onmouseover="this.style.transform='scale(1.2) rotate(5deg)'" onmouseout="this.style.transform='scale(1) rotate(15deg)'">
-
             <div class="letter-peek"></div>
             <div class="envelope-back-left"></div>
             <div class="envelope-back-right"></div>
@@ -829,9 +825,11 @@
     <!-- ===== SCENE 2: FULL INVITATION ===== -->
     <main class="scene-card" id="scene-card">
         <article class="invitation-card">
+            <!-- GWIC Logo on Card Top Right -->
+            <img src="photos/gwic_logo.png" class="sticker el hover-pop" data-delay="850" style="top: -65px; right: -10px; transform: rotate(12deg); width: 130px; height: auto; box-shadow: none; border-radius: 0; background: transparent; padding: 0;" alt="GWIC Logo">
             <!-- Cutesy Scrapbook Stickers -->
-            <div class="sticker-emoji el hover-pop" data-delay="900" style="top: -25px; right: -25px; transform: rotate(15deg);">🎀</div>
-            <div class="sticker el hover-pop" data-delay="1000" style="top: 35%; left: -20px; transform: rotate(-12deg);">Top Secret! 🤫</div>
+            <div class="sticker-emoji el hover-pop" data-delay="900" style="top: -45px; right: 80px; transform: rotate(15deg);">🎀</div>
+            <div class="sticker el hover-pop" data-delay="1000" style="top: 3%; left: -25px; transform: rotate(-12deg);">Top Secret! 🤫</div>
             
             <div class="sticker el hover-pop" data-delay="1050" style="top: 25%; right: -25px; transform: rotate(18deg); background: #ffe4e1; border: 2px dashed #ffb6c1; color: #ff1493;">Best Batch ✨</div>
             
@@ -864,8 +862,9 @@
                 <div class="photo-frame"><img src="photos/gwic_2.jpeg" alt="GWIC Memory"></div>
                 <div class="photo-frame"><img src="photos/gwic_3.jpeg" alt="GWIC Memory"></div>
                 <div class="photo-frame"><img src="photos/gwic_4.jpeg" alt="GWIC Memory"></div>
-                <div class="photo-frame"><img src="photos/gwic_11.jpeg" alt="GWIC Memory top"></div>
                 <div class="photo-frame"><img src="photos/gwic_7.jpeg" alt="GWIC Memory"></div>
+                <div class="photo-frame"><img src="photos/gwic_8.jpeg" alt="GWIC Memory top"></div>
+                <div class="photo-frame"><img src="photos/gwic_11.jpeg" alt="GWIC Memory top"></div>
             </div>
             <div class="photo-strip-caption el" data-delay="850">A few chapters from our beautiful story... ✨</div>
 
@@ -876,17 +875,11 @@
             <div class="memory-strip-wrapper el" data-delay="900">
                 <div class="memory-strip-label">swipe for more memories →</div>
                 <div class="memory-strip">
-                    <div class="memory-frame" data-caption="squad goals 💛">
-                        <img src="photos/gwic_8.jpeg" alt="Group photo outdoors">
-                    </div>
                     <div class="memory-frame" data-caption="the whole gang 🫶">
                         <img src="photos/gwic_9.jpeg" alt="Group selfie indoors">
                     </div>
                     <div class="memory-frame" data-caption="always a chaotic vibe ✨">
                         <img src="photos/gwic_10.jpeg" style="object-position: right 25%;" alt="Posing">
-                    </div>
-                    <div class="memory-frame" data-caption="the vibes 🥹">
-                        <img src="photos/gwic_11.jpeg" alt="Candid moment">
                     </div>
                 </div>
             </div>
@@ -1029,7 +1022,8 @@
             if (opened) return;
             opened = true;
             
-            // Start background music nicely
+            // Start background music nicely exactly at 0:55
+            bgm.currentTime = 55;
             bgm.volume = 0.5;
             bgm.play().catch(e => console.log('Audio autoplay blocked, requires user interact.'));
 
