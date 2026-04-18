@@ -822,7 +822,6 @@
 
             <!-- Responsive Frame Gallery -->
             <div class="photo-grid el" data-delay="800">
-                <div class="photo-frame"><img src="photos/gwic_1.jpeg" alt="GWIC Memory"></div>
                 <div class="photo-frame"><img src="photos/gwic_2.jpeg" alt="GWIC Memory"></div>
                 <div class="photo-frame"><img src="photos/gwic_3.jpeg" alt="GWIC Memory"></div>
                 <div class="photo-frame"><img src="photos/gwic_4.jpeg" alt="GWIC Memory"></div>
@@ -1009,7 +1008,12 @@
             // Reveal card
             setTimeout(() => {
                 sceneCard.classList.add('active');
-                window.scrollTo({ top: 0, behavior: 'instant' });
+                
+                // Ensure browser smoothly locks onto the top of the newly revealed card
+                setTimeout(() => {
+                    document.body.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 50);
+                
                 boom();
                 animateElements();
             }, 2000);
