@@ -1121,12 +1121,6 @@
         }
 
         wrapper.addEventListener('click', triggerOpen);
-        window.addEventListener('wheel', (e) => {
-            if (e.deltaY > 0) triggerOpen();
-        });
-        window.addEventListener('touchmove', (e) => {
-            triggerOpen();
-        }, {passive: true});
 
         // ===== STAGGERED REVEAL =====
         function animateElements() {
