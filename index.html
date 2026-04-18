@@ -679,6 +679,18 @@
             pointer-events: none;
         }
 
+        /* ===== MICRO INTERACTIONS ===== */
+        .hover-pop {
+            pointer-events: auto !important;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+        }
+
+        .hover-pop:hover {
+            transform: scale(1.35) rotate(0deg) !important;
+            z-index: 50 !important;
+        }
+
         .particle {
             position: absolute;
             width: 2px;
@@ -781,6 +793,12 @@
 
     <div class="flower-layer" id="flower-layer"></div>
 
+    <!-- Floating Mascots -->
+    <div class="sticker-emoji hover-pop wiggle" style="top: 15%; left: 8vw; animation-duration: 4s;">🌸</div>
+    <div class="sticker-emoji hover-pop" style="top: 20%; right: 10vw; transform: scale(0.8) rotate(15deg);">✨</div>
+    <div class="sticker-emoji hover-pop wiggle" style="bottom: 25%; left: 15vw; transform: rotate(-10deg);">🦋</div>
+    <div class="sticker-emoji hover-pop" style="bottom: 20%; right: 12vw; transform: scale(1.1) rotate(5deg);">💫</div>
+
     <!-- ===== SCENE 1: ENVELOPE ===== -->
     <section class="scene-envelope" id="scene-envelope">
         <div class="envelope-wrapper" id="envelope-wrapper">
@@ -800,13 +818,23 @@
     <!-- ===== SCENE 2: FULL INVITATION ===== -->
     <main class="scene-card" id="scene-card">
         <article class="invitation-card">
-            <!-- Cutesy Scrapbook Stickers -->
-            <div class="sticker-emoji el" data-delay="900" style="top: -25px; right: -25px; transform: rotate(15deg);">🎀</div>
-            <div class="sticker el" data-delay="1000" style="top: 15%; left: -25px; transform: rotate(-15deg);">Top Secret! 🤫</div>
-            <div class="sticker-emoji el" data-delay="1100" style="top: 45%; right: -30px; transform: rotate(-10deg); font-size: 2.2rem;">💖</div>
-            <div class="sticker el" data-delay="1200" style="bottom: 15%; left: -25px; transform: rotate(12deg); color: #8b7355; border-radius: 50%; width: 55px; height: 55px; display:flex; align-items:center; justify-content:center; text-align:center; padding:0; z-index: 20;">VIP</div>
+            <!-- Cutesy Scrapbook Stickers & GWIC Logo -->
+            <img src="photos/gwic_logo.png" class="sticker el hover-pop" data-delay="850" style="top: -65px; left: 50%; transform: translateX(-50%) rotate(4deg); width: 130px; height: auto; box-shadow: none; border-radius: 0; background: transparent; padding: 0;" alt="GWIC Logo">
+            
+            <div class="sticker-emoji el hover-pop" data-delay="900" style="top: -25px; right: -25px; transform: rotate(15deg);">🎀</div>
+            <div class="sticker el hover-pop" data-delay="1000" style="top: 15%; left: -25px; transform: rotate(-15deg);">Top Secret! 🤫</div>
+            
+            <div class="sticker el hover-pop" data-delay="1050" style="top: 25%; right: -25px; transform: rotate(18deg); background: #ffe4e1; border: 2px dashed #ffb6c1; color: #ff1493;">Best Batch ✨</div>
+            
+            <div class="sticker-emoji el hover-pop" data-delay="1100" style="top: 45%; right: -30px; transform: rotate(-10deg); font-size: 2.2rem;">💖</div>
+            
+            <div class="sticker-emoji el hover-pop" data-delay="1150" style="bottom: 25%; left: -15px; transform: rotate(-25deg); font-size: 2.5rem;">🌸</div>
+            
+            <div class="sticker el hover-pop" data-delay="1200" style="bottom: 12%; left: -25px; transform: rotate(12deg); color: #8b7355; border-radius: 50%; width: 55px; height: 55px; display:flex; align-items:center; justify-content:center; text-align:center; padding:0; z-index: 20;">VIP</div>
+            
+            <div class="sticker el hover-pop" data-delay="1250" style="bottom: -15px; right: 10%; transform: rotate(-5deg); background: #f0f8ff; border: 1px solid #add8e6; color: #4682b4; font-size: 1rem;">We'll miss u! 🦋</div>
 
-            <header class="card-emojis el" data-delay="0">🎊 ✨ 🥳</header>
+            <header class="card-emojis el" data-delay="0" style="margin-top: 1.5rem;">🎊 ✨ 🥳</header>
             <div class="card-gwic el" data-delay="100">GWIC — Farewell</div>
             <div class="card-invited el" data-delay="200">the official</div>
             <div class="card-farewell el" data-delay="300">Farewell Party for the</div>
